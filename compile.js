@@ -95,12 +95,12 @@ function beginPlaylist() {
 }
 function addToPlaylist(playlist, title, filename) {
     playlist.tracks += 1
-    playlist.data += `FILE ${filename} MP3\n`;
-    playlist.data += `  TRACK ${String(playlist.tracks).padStart(2,'0')} AUDIO\n`
-    playlist.data += `    TITLE "${title.replaceAll("\"","\\\"")}"\n`
-    playlist.data += `    PERFORMER "${getGameProperty("meta.author")}"\n`
-    playlist.data += `    FLAGS DCP\n`
-    playlist.data += `    INDEX 01 00:00:00\n`
+    playlist.data +=               `FILE ${filename} MP3\n`;
+    playlist.data +=               `  TRACK ${String(playlist.tracks).padStart(2,'0')} AUDIO\n`
+    playlist.data += title != "" ? `    TITLE "${title.replaceAll("\"","\\\"")}"\n` : ""
+    playlist.data +=               `    PERFORMER "${getGameProperty("meta.author")}"\n`
+    playlist.data +=               `    FLAGS DCP\n`
+    playlist.data +=               `    INDEX 01 00:00:00\n`
     return playlist;
 }
 function finishPlaylist(playlist, path) {
@@ -335,7 +335,7 @@ switch (getGameProperty("meta.version")) {
             createSpeech(getGameProperty(`game.${key}.speech`), key.replace(/(\W+)/g, '-')+".temp.mp3")
             await doneWithTTS
             padWithSilence("./"+out_directory+"/"+key.replace(/(\W+)/g, '-')+".temp.mp3", "./"+out_directory+"/"+key.replace(/(\W+)/g, '-')+".mp3", 5)
-            playlist = addToPlaylist(playlist, getGameProperty(`game.${key}.title`), "./"+key.replace(/(\W+)/g, '-')+".mp3")
+            playlist = addToPlaylist(playlist, gameHasProperty(`game.${key}.title`) ? getGameProperty(`game.${key}.title`) : "", "./"+key.replace(/(\W+)/g, '-')+".mp3")
         }
         finishPlaylist(playlist, "./"+out_directory+"/"+"playlist.cue")
         break;
