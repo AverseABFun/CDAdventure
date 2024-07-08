@@ -1,6 +1,6 @@
 # CDAdventure
 
-Put a choose-your-own-adventure on a CD!
+Put a choose-your-own-adventure on a CD! Also, a warning: Don't play trench_journey. It is incredibly boring. I don't know why I made it like that. Also, there are weird spelling errors.
 
 ## Required tools to use
 
