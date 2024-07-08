@@ -46,7 +46,7 @@ var overrides = {
     "options_track_backward_prefix": ", skip backward ",
     "options_track_suffix_plural": " tracks. ",
     "options_track_suffix_singular": " track. ",
-    "request_to_pause": "Please pause and make your decision. "
+    "request_to_pause": "Please pause and make your decision now. "
 }
 
 let isString = value => typeof value === 'string' || value instanceof String;
