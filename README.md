@@ -2,7 +2,7 @@
 
 Put a choose-your-own-adventure on a CD!
 
-## Requirements to use
+## Required tools to use
 
 * ffmpeg
 * node.js
