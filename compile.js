@@ -14,6 +14,7 @@ if (!existsSync("./games/"+process.argv[2]+".json")) {
 }
 
 var out_directory = "out"
+var debug = false
 if (process.argv.length>=4) {
     if (process.argv[3] != "--debug") {
         out_directory = process.argv[3];
@@ -35,7 +36,6 @@ if (!existsSync("./"+out_directory)) {
 import gTTS from 'gtts';
 import { exec } from 'child_process';
 
-var debug = false
 var overrides = {
     "options_prefix": "You can ",
     "options_item_separator": ", ",
@@ -220,51 +220,53 @@ switch (getGameProperty("meta.version")) {
         finishPlaylist(playlist, "./"+out_directory+"/"+"playlist.cue")
         break;
     case 1.2:
-        assertGameHasProperty("meta.name")
-        assertGameHasProperty("meta.author")
-        assertGameHasProperty("game."+getGameProperty("meta.beginning"))
-        for (var item of Object.keys(getGameProperty("game"))) {
-            assertGameHasProperty(`game.${item}.speech`)
-            if (!(gameHasProperty(`game.${item}.end`) && getGameProperty(`game.${item}.end`))) {
-                assertGameHasProperty(`game.${item}.options`)
-                assert(Object.keys(getGameProperty(`game.${item}.options`)).length>0, 2, `Game track ${item}'s options has a length of 0!`)
-            }
-        }
-        if (gameHasProperty("meta.overrides")) {
-            for (var item of Object.keys(getGameProperty("meta.overrides"))) {
-                assert(isString(getGameProperty(`meta.overrides.${item}`)), 2, `Overriden text ${item}'s value isn't a string!`)
-            }
-            overrides = getGameProperty("meta.overrides")
-        }
         var keys = Object.keys(getGameProperty("game"))
-        for (var key of keys) {
-            if (gameHasProperty(`game.${key}.end`) && getGameProperty(`game.${key}.end`)) {
-                continue
-            }
-            const index = keys.indexOf(key)
-            setGameProperty(`game.${key}.speech`, getGameProperty(`game.${key}.speech`)+overrides.speech_options_separator+overrides.options_prefix)
-            var options = getGameProperty(`game.${key}.options`)
-            var options_out = ""
-            var optionsKeys = Object.keys(options)
-            for (var key2 of optionsKeys) {
-                var option = key2
-                options[option] = keys.indexOf(options[option])
-                var optionsIndex = optionsKeys.indexOf(key2)
-                if (optionsIndex != 0 && optionsIndex != optionsKeys.length-1) {
-                    option = overrides.options_item_separator+option
-                } else if (optionsIndex != 0) {
-                    option = overrides.last_options_item_separator+option
+        if (!debug) {
+            assertGameHasProperty("meta.name")
+            assertGameHasProperty("meta.author")
+            assertGameHasProperty("game."+getGameProperty("meta.beginning"))
+            for (var item of Object.keys(getGameProperty("game"))) {
+                assertGameHasProperty(`game.${item}.speech`)
+                if (!(gameHasProperty(`game.${item}.end`) && getGameProperty(`game.${item}.end`))) {
+                    assertGameHasProperty(`game.${item}.options`)
+                    assert(Object.keys(getGameProperty(`game.${item}.options`)).length>0, 2, `Game track ${item}'s options has a length of 0!`)
                 }
-                options_out += option
             }
-            options_out += ". ";
-            for (var key2 of optionsKeys) {
-                var offset = (options[key2]+1)-(index+1)
-                console.log(key2)
-                console.log(offset)
-                options_out += `${overrides.options_track_prefix}${key2}${(offset)<0 ? overrides.options_track_backward_prefix : overrides.options_track_forward_prefix}${Math.abs(offset).toString()}${offset > 1 || offset < -1 ? overrides.options_track_suffix_plural : overrides.options_track_suffix_singular}`
+            if (gameHasProperty("meta.overrides")) {
+                for (var item of Object.keys(getGameProperty("meta.overrides"))) {
+                    assert(isString(getGameProperty(`meta.overrides.${item}`)), 2, `Overriden text ${item}'s value isn't a string!`)
+                }
+                overrides = getGameProperty("meta.overrides")
             }
-            setGameProperty(`game.${key}.speech`, getGameProperty(`game.${key}.speech`)+options_out)
+            for (var key of keys) {
+                if (gameHasProperty(`game.${key}.end`) && getGameProperty(`game.${key}.end`)) {
+                    continue
+                }
+                const index = keys.indexOf(key)
+                setGameProperty(`game.${key}.speech`, getGameProperty(`game.${key}.speech`)+overrides.speech_options_separator+overrides.options_prefix)
+                var options = getGameProperty(`game.${key}.options`)
+                var options_out = ""
+                var optionsKeys = Object.keys(options)
+                for (var key2 of optionsKeys) {
+                    var option = key2
+                    options[option] = keys.indexOf(options[option])
+                    var optionsIndex = optionsKeys.indexOf(key2)
+                    if (optionsIndex != 0 && optionsIndex != optionsKeys.length-1) {
+                        option = overrides.options_item_separator+option
+                    } else if (optionsIndex != 0) {
+                        option = overrides.last_options_item_separator+option
+                    }
+                    options_out += option
+                }
+                options_out += ". ";
+                for (var key2 of optionsKeys) {
+                    var offset = (options[key2]+1)-(index+1)
+                    console.log(key2)
+                    console.log(offset)
+                    options_out += `${overrides.options_track_prefix}${key2}${(offset)<0 ? overrides.options_track_backward_prefix : overrides.options_track_forward_prefix}${Math.abs(offset).toString()}${offset > 1 || offset < -1 ? overrides.options_track_suffix_plural : overrides.options_track_suffix_singular}`
+                }
+                setGameProperty(`game.${key}.speech`, getGameProperty(`game.${key}.speech`)+options_out)
+            }
         }
         var playlist = beginPlaylist();
         var beginning = getGameProperty("meta.beginning")
@@ -280,9 +282,6 @@ switch (getGameProperty("meta.version")) {
             await doneWithTTS
             padWithSilence("./"+out_directory+"/"+key.replace(/(\W+)/g, '-')+".temp.mp3", "./"+out_directory+"/"+key.replace(/(\W+)/g, '-')+".mp3", 5)
             playlist = addToPlaylist(playlist, gameHasProperty(`game.${key}.title`) ? getGameProperty(`game.${key}.title`) : "", "./"+key.replace(/(\W+)/g, '-')+".mp3")
-        }
-        for (var key of keys) {
-            rmSync("./"+out_directory+"/"+key.replace(/(\W+)/g, '-')+".temp.mp3")
         }
         finishPlaylist(playlist, "./"+out_directory+"/"+"playlist.cue")
         if (keys.length >= 100) {
