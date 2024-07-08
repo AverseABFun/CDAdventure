@@ -80,7 +80,6 @@ function padWithSilence(inputFile, outputFile, duration) {
             console.error(`Error padding file: ${error.message}`);
             return;
         }
-        rmSync(inputFile)
         if (stderr) {
             console.error(`FFmpeg stderr: ${stderr}`);
             return;
@@ -226,8 +225,10 @@ switch (getGameProperty("meta.version")) {
         assertGameHasProperty("game."+getGameProperty("meta.beginning"))
         for (var item of Object.keys(getGameProperty("game"))) {
             assertGameHasProperty(`game.${item}.speech`)
-            assertGameHasProperty(`game.${item}.options`)
-            assert(Object.keys(getGameProperty(`game.${item}.options`)).length>0, 2, `Game track ${item}'s options has a length of 0!`)
+            if (!(gameHasProperty(`game.${item}.end`) && getGameProperty(`game.${item}.end`))) {
+                assertGameHasProperty(`game.${item}.options`)
+                assert(Object.keys(getGameProperty(`game.${item}.options`)).length>0, 2, `Game track ${item}'s options has a length of 0!`)
+            }
         }
         if (gameHasProperty("meta.overrides")) {
             for (var item of Object.keys(getGameProperty("meta.overrides"))) {
@@ -237,6 +238,9 @@ switch (getGameProperty("meta.version")) {
         }
         var keys = Object.keys(getGameProperty("game"))
         for (var key of keys) {
+            if (gameHasProperty(`game.${key}.end`) && getGameProperty(`game.${key}.end`)) {
+                continue
+            }
             const index = keys.indexOf(key)
             setGameProperty(`game.${key}.speech`, getGameProperty(`game.${key}.speech`)+overrides.speech_options_separator+overrides.options_prefix)
             var options = getGameProperty(`game.${key}.options`)
@@ -277,7 +281,13 @@ switch (getGameProperty("meta.version")) {
             padWithSilence("./"+out_directory+"/"+key.replace(/(\W+)/g, '-')+".temp.mp3", "./"+out_directory+"/"+key.replace(/(\W+)/g, '-')+".mp3", 5)
             playlist = addToPlaylist(playlist, gameHasProperty(`game.${key}.title`) ? getGameProperty(`game.${key}.title`) : "", "./"+key.replace(/(\W+)/g, '-')+".mp3")
         }
+        for (var key of keys) {
+            rmSync("./"+out_directory+"/"+key.replace(/(\W+)/g, '-')+".temp.mp3")
+        }
         finishPlaylist(playlist, "./"+out_directory+"/"+"playlist.cue")
+        if (keys.length >= 100) {
+            console.error(`\x1b[33mWarning: Over 99 game tracks. Please note that some CD players may not support having this many.\x1b[0m\x07`)
+        }
         break;
     default:
         assert(false, 3, "Invalid version, expected 1.1 or 1.2!")

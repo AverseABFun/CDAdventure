@@ -41,9 +41,7 @@
         "something_else": {
             "speech": "Ooooooh something special!",
             "title": "That's exciting!",
-            "options": {
-                "Go back": "start"
-            }
+            "end": true
         }
     }
 }

@@ -25,12 +25,235 @@
             }
         },
         "start": {
-            "speech": "The year is 2078. Humans have spread almost everywhere in the solar system that they can, and among the few remaining places is the bottom of the mariana trench. You are among the crew of the expedition to find what's down there . . . You are currently in the expedition vessel. The above ground team captain is shouting down at you, asking if you're ready.",
+            "speech": "The year is 2078. Humans have spread almost everywhere in the solar system that they can. Among the few remaining places is the bottom of the mariana trench. You are among the crew of the expedition to find what's down there . . . You are currently in the expedition vessel. The above ground team captain is shouting down at you, asking if you're ready.",
             "title": "Inside the expedition vessel",
             "options": {
                 "respond with, Yep, lower us down!": "everything_good",
                 "respond with, Let me double check!": "double_check"
             }
+        },
+        "everything_good": {
+            "speech": "As the above ground captain starts lowering you and your team, you hear metallic clanking and your stomach drops. You peer out the window and see the light slowly receeding. After not long, you feel the vessel jerk to a halt and you hear the above ground captain speak over the intercom, saying Alright, we've reached the end of the tether. We need you to disconnect it down there so you can keep going down further. You're at roughly -100 feet, only 35,962 feet left to go!",
+            "title": "Inside the expedition vessel",
+            "options": {
+                "examine the central console": "examine_central_console_100"
+            }
+        },
+        "double_check": {
+            "speech": "The above ground captain just says, there's nothing else to double check, but alright. I'll give you five minutes.",
+            "title": "Inside the expedition vessel",
+            "options": {
+                "examine the central console": "examine_central_console_0"
+            }
+        },
+        "examine_central_console_0": {
+            "speech": "You examine the central console. Not much is lit up right now, as you are still connected to the tether. Oxygen levels are showing green, and the oxygen generator is online. You have stores of fresh water and a water purifier, of which all is good.",
+            "title": "Looking at the central console",
+            "options": {
+                "test the oxygen tanks and generator": "test_oxygen_0",
+                "test the water stores and purifier": "test_water_0",
+                "test engines": "test_engines_0",
+                "ask the above ground captain to lower you": "everything_good"
+            }
+        },
+        "test_oxygen_0": {
+            "speech": "You press the test button under the oxygen status. The oxygen status briefly flickers from red to green and then you hear a loud siren briefly turn on before everything goes back to normal. You look back down at the central console and the oxygen status says: TEST SUCCEEDED.",
+            "title": "Looking at the central console",
+            "options": {
+                "test the water stores and purifier": "test_water_0",
+                "test engines": "test_engines_0",
+                "ask the above ground captain to lower you": "everything_good"
+            }
+        },
+        "test_water_0": {
+            "speech": "You press the test button under the water status. The water status briefly flickers from red to green and you hear a loud sucking noise coming from the pipes before everything goes back to normal. You look back down at the central console and the water status says: TEST SUCCEEDED.",
+            "title": "Looking at the central console",
+            "options": {
+                "test the oxygen tanks and generator": "test_oxygen_0",
+                "test engines": "test_engines_0",
+                "ask the above ground captain to lower you": "everything_good"
+            }
+        },
+        "test_engines_0": {
+            "speech": "You press the test button under the engine status. The engine status briefly flickers from red to green and you hear each engine individually turn on and off before everything goes back to normal. You look back down at the central console and the engine status says: TEST SUCCEEDED.",
+            "title": "Looking at the central console",
+            "options": {
+                "test the water stores and purifier": "test_water_0",
+                "test the oxygen tanks and generator": "test_oxygen_0",
+                "ask the above ground captain to lower you": "everything_good"
+            }
+        },
+        "test_engines_100": {
+            "speech": "You press the test button under the engine status. The engine status briefly flickers from red to green and you hear each engine individually turn on and off before everything goes back to normal. You look back down at the central console and the engine status says: TEST SUCCEEDED.",
+            "title": "Looking at the central console",
+            "options": {
+                "examine the central console again": "examine_central_console_100"
+            }
+        },
+        "examine_central_console_100": {
+            "speech": "You examine the central console. You see a large readout showing -100 FEET and a bunch of lit up buttons. All statuses are currently green.",
+            "title": "Looking at the central console",
+            "options": {
+                "press the DISCONNECT TETHER button": "disconnect_tether",
+                "test the engines": "test_engines_100"
+            }
+        },
+        "disconnect_tether": {
+            "speech": "You hear a loud alarm blaring for a few seconds before the tether disconnects with a loud hiss. Most of the central console lights up and the above ground captain says, Good job. Make sure you're being careful and I'll see you on the surface.",
+            "title": "Disconnected from the tether",
+            "options": {
+                "examine the central console again": "examine_central_console_101"
+            }
+        },
+        "examine_central_console_101": {
+            "speech": "You examine the central console. Most of it is now lit up, and you can see a couple things in particular, including that you are at -101 feet and the bouyancy is currently at 99%.",
+            "title": "Looking at the central console",
+            "options": {
+                "decrease buoyancy": "decrease_bouyancy"
+            }
+        },
+        "decrease_bouyancy": {
+            "speech": "As you press the button, you hear a loud hiss and the sound of rushing water. You feel your stomach drop slightly and note the bouyancy and decreased to 90%.",
+            "title": "Looking at the central console",
+            "options": {
+                "decrease buoyancy again": "decrease_bouyancy_again",
+                "enable engines": "enable_engines_early"
+            }
+        },
+        "enable_engines_early": {
+            "speech": "You attempt to press the button, but you hear a loud click and a message shows up on the screen: ERROR: BOUYANCY IS TOO HIGH. PLEASE DECRESE BOUYANCY TO AT LEAST 60% BEFORE ENABLING ENGINES.",
+            "title": "Looking at the central console",
+            "options": {
+                "decrease buoyancy": "decrease_bouyancy_again"
+            }
+        },
+        "decrease_bouyancy_again": {
+            "speech": "You press the button again and hear the hiss and the water. Your stomach drops again and you note the bouyancy is now at 75%, and you are dropping very slowly.",
+            "title": "Looking at the central console",
+            "options": {
+                "decrease buoyancy yet again": "decrease_bouyancy_yet_again",
+                "enable engines": "enable_engines_early_again"
+            }
+        },
+        "enable_engines_early_again": {
+            "speech": "You attempt to press the button, but you hear a loud click and a message shows up on the screen: ERROR: BOUYANCY IS TOO HIGH. PLEASE DECRESE BOUYANCY TO AT LEAST 60% BEFORE ENABLING ENGINES.",
+            "title": "Looking at the central console",
+            "options": {
+                "decrease buoyancy": "decrease_bouyancy_yet_again"
+            }
+        },
+        "decrease_bouyancy_yet_again": {
+            "speech": "You press the button yet again and the boyancy is now 55% and you are falling slightly faster.",
+            "title": "Looking at the central console",
+            "options": {
+                "enable engines": "enable_engines"
+            }
+        },
+        "enable_engines": {
+            "_comment1": "Maximum depth: 36,062 feet",
+            "speech": "You press the button to enable the engines, and you hear the engines starting up. You hear the mechanical sound of them extending out of the top of the vessel and beginning to rotate, before you feel the vessel beginning to speed downwards. You check the readout, and see you are going down at the slow speed of 10 mph. You see the speed and ponder why it is so slow, given how most underwater vessels can reach 100 mph.",
+            "title": "Slowly falling",
+            "options": {
+                "wait 30 minutes for you to near the bottom": "wait",
+                "test everything and then wait": "test_and_wait"
+            }
+        },
+        "wait": {
+            "speech": "You wait a while. You play a game of solitare. You meet with your crew and play poker. Eventually, you near the bottom and you begin preparations for landing.",
+            "title": "Preparing for landing",
+            "options": {
+                "lower landing pads": "lower_landing_pads"
+            }
+        },
+        "test_and_wait": {
+            "speech": "You test everything(which only took around 10 minutes) and then tou wait a while. You play a game of solitare. You meet with your crew and play poker. Eventually, you near the bottom and you begin preparations for landing.",
+            "title": "Preparing for landing",
+            "options": {
+                "lower landing pads": "lower_landing_pads"
+            }
+        },
+        "lower_landing_pads": {
+            "speech": "You press the button. You hear the hissing as the hexagonal panels rise out of smooth underside of the ship and you hear some bubbles as a small amount of air escapes.",
+            "title": "Preparing for landing",
+            "options": {
+                "check all of the pressure suits": "check_suits",
+                "check the air lock": "check_airlock"
+            }
+        },
+        "check_suits": {
+            "speech": "You walk over to them and, one at a time, pick them up and place them into a testing chamber. For each one, you have it pump in high-pressure water from outside the ship in and you will have them sit there for a few hours to make sure they can handle it.",
+            "title": "Preparing for landing",
+            "options": {
+                "check the air lock": "check_airlock_2"
+            }
+        },
+        "check_airlock": {
+            "speech": "You walk to the interior airlock and open up the panel. Inside of it, you press the TEST EXTERIOR button and watch as it pumps out the air and pumps in the pressurized water before opening the outside, closing, pumping out the water and in the air, opening the inside, and then closing again. After this is done, you tell it to lock the exterior airlock and test the interior airlock, which consists solely of it opening and closing the interior door. You tell it to lock all airlocks(to be safe, this is recommended practice) and you see it works.",
+            "title": "Preparing for landing",
+            "options": {
+                "check all of the pressure suits": "check_suits_2"
+            }
+        },
+        "check_airlock_2": {
+            "speech": "You walk to the interior airlock and open up the panel. Inside of it, you press the TEST EXTERIOR button and watch as it pumps out the air and pumps in the pressurized water before opening the outside, closing, pumping out the water and in the air, opening the inside, and then closing again. After this is done, you tell it to lock the exterior airlock and test the interior airlock, which consists solely of it opening and closing the interior door. You tell it to lock all airlocks(to be safe, this is recommended practice) and you see it works.",
+            "title": "Preparing for landing",
+            "options": {
+                "run all tests": "run_tests"
+            }
+        },
+        "check_suits_2": {
+            "speech": "You walk over to them and, one at a time, pick them up and place them into a testing chamber. For each one, you have it pump in high-pressure water from outside the ship in and you will have them sit there for a few hours to make sure they can handle it.",
+            "title": "Preparing for landing",
+            "options": {
+                "run all tests": "run_tests"
+            }
+        },
+        "run_tests": {
+            "speech": "You walk back to the main console, and press the intercom button before saying, Attention crew, we will be running manual tests soon. Please head to your stations and prepare for the tests.",
+            "title": "Preparing for tests",
+            "options": {
+                "walk to your station and wait a few minutes for everyone else": "walk_to_station"
+            }
+        },
+        "walk_to_station": {
+            "speech": "You head to your station and wait the few minutes. After that, you press the BEGIN TESTS button and run your own tests before it automatically switches to the next person in line. As this is happening, you feel the vessel touchdown and you continue running the tests until the end.",
+            "title": "Landed!",
+            "options": {
+                "head back to the main console": "examine_central_console_touchdown_1"
+            }
+        },
+        "examine_central_console_touchdown_1": {
+            "speech": "At this point, the entire console is lit up. There are a few tasks you have to do, now that you've landed.",
+            "title": "Looking at the central console",
+            "options": {
+                "disable engines": "disable_engines_touchdown"
+            }
+        },
+        "disable_engines_touchdown": {
+            "speech": "You press the button, and you feel and hear the whirring stop. You then hear a series of mechanical clicks as the engines retract and prepare for automatic testing.",
+            "title": "Landed!",
+            "options": {
+                "activate ground anchors": "activate_ground_anchors"
+            }
+        },
+        "activate_ground_anchors": {
+            "speech": "You press the button and feel a slight shaking as the anchors extend into the rock. The anchors then automatically prepare for emergencies by connecting their massive springs and coordinating with the bottom engines to provide emergency power.",
+            "title": "Landed!",
+            "options": {
+                "pop out automatic biology laboratory": "pop_out_laboratory"
+            }
+        },
+        "pop_out_laboratory": {
+            "speech": "As the laboratory extends outwards, anchors itself, and begins automatically setting everything up, the rest of the ship shutters. You weren't prepared for it, but you remain up right as you knew that there would be lots of siesmic activity down here. You quickly enable the siesmic stabilizers and the ship stops shuttering. This is the end of the game(mostly), so thanks for playing!",
+            "title": "Landed!",
+            "options": {
+                "skip to the end of the week, back up on the surface": "topside"
+            }
+        },
+        "topside": {
+            "speech": "As you look through the porthole at the above ground team, you realize the magnitude of what you just did. As of now, every place underwater has been visited at least once, and you were the one to finish that. You shake the president's hand and are examined by the leading doctors and psychologists with your crew to ensure you are healthy, and watch from what seems like an outsider's perspective as you are recognized in the street and congratulated daily. This is the end, and thanks for playing!",
+            "title": "Thanks for playing!",
+            "end": true
         }
     }
 }
