@@ -13,13 +13,15 @@
             "options_track_prefix": "To ",
             "options_track_forward_prefix": ", skip forward ",
             "options_track_backward_prefix": ", skip backward ",
+            "options_track_go_to": ", go to track ",
+            "options_track_go_to_suffix": ". ",
             "options_track_suffix_plural": " tracks. ",
             "options_track_suffix_singular": " track. ",
             "request_to_pause": "Please pause and make your decision now. "
         },
-        "_comment2": "All values in the 'overrides' object are the defaults, but they don't have to be(obviously). request_to_pause is only used in version 1.2.",
-        "version": 1.2,
-        "_comment3": "Version 1.1 and 1.2 are identical but 1.2 asks the user to pause after listing the options and gives only five seconds of delay after the speech"
+        "_comment2": "All values in the 'overrides' object are the defaults, but they don't have to be(obviously). request_to_pause is only used in version 1.2 and options_track_go_to+options_track_go_to_suffix is only used in 1.3",
+        "version": 1.3,
+        "_comment3": "Version 1.1 and 1.2 are identical but 1.2 asks the user to pause after listing the options and gives only five seconds of delay after the speech. 1.3 is identical to 1.2, but instead just says the exact"
     },
     "game": {
         "start": {
