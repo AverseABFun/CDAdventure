@@ -1,0 +1,47 @@
+{
+    "meta": {
+        "name": "Test Game",
+        "description": "This is a game that isn't actually a game but just a test for the compiler thing 😃. Also, this description won't get written to disc 🙁",
+        "beginning": "start",
+        "author": "Arthur Beck",
+        "_comment1": "All keys that the compiler doesn't recognize, it ignores. Including this.",
+        "overrides": {
+            "options_prefix": "You can ",
+            "options_item_separator": ", ",
+            "last_options_item_separator": ", or ",
+            "speech_options_separator": " ... ... ... ",
+            "options_track_prefix": "To ",
+            "options_track_forward_prefix": ", skip forward ",
+            "options_track_backward_prefix": ", skip backward ",
+            "options_track_suffix_plural": " tracks. ",
+            "options_track_suffix_singular": " track. "
+        },
+        "_comment2": "All values in the 'overrides' object are the defaults, but they don't have to be(obviously).",
+        "version": 1
+    },
+    "game": {
+        "start": {
+            "speech": "This is literally just a test. Nothing more, nothing less.",
+            "title": "Listen! It's a test!",
+            "options": {
+                "Listen to this again!": "start2",
+                "Try something else!": "something_else"
+            }
+        },
+        "start2": {
+            "speech": "This is literally just a test. Nothing more, nothing less.",
+            "title": "Listen! It's a test!",
+            "options": {
+                "Listen to this again!": "start",
+                "Try something else!": "something_else"
+            }
+        },
+        "something_else": {
+            "speech": "Ooooooh something special!",
+            "title": "That's exciting!",
+            "options": {
+                "Go back": "start"
+            }
+        }
+    }
+}
