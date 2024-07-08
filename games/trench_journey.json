@@ -1,0 +1,36 @@
+{
+    "meta": {
+        "name": "The Journey into the Trench",
+        "beginning": "title",
+        "author": "Arthur Beck",
+        "overrides": {
+            "options_prefix": "You may ",
+            "options_item_separator": ", ",
+            "last_options_item_separator": ", or ",
+            "speech_options_separator": " ... ... ... ",
+            "options_track_prefix": "To ",
+            "options_track_forward_prefix": ", skip forward ",
+            "options_track_backward_prefix": ", skip backward ",
+            "options_track_suffix_plural": " tracks. ",
+            "options_track_suffix_singular": " track. ",
+            "request_to_pause": "Please pause and make your decision now. "
+        },
+        "version": 1.2
+    },
+    "game": {
+        "title": {
+            "speech": "The Journey into the Trench: A CD Adventure by Arthur Beck.",
+            "options": {
+                "start the game": "start"
+            }
+        },
+        "start": {
+            "speech": "The year is 2078. Humans have spread almost everywhere in the solar system that they can, and among the few remaining places is the bottom of the mariana trench. You are among the crew of the expedition to find what's down there . . . You are currently in the expedition vessel. The above ground team captain is shouting down at you, asking if you're ready.",
+            "title": "Inside the expedition vessel",
+            "options": {
+                "respond with, Yep, lower us down!": "everything_good",
+                "respond with, Let me double check!": "double_check"
+            }
+        }
+    }
+}
