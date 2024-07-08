@@ -51,21 +51,15 @@ var overrides = {
 
 let isString = value => typeof value === 'string' || value instanceof String;
 
-var speechCache = {}
 var doneWithTTS = new Promise((resolve)=>{_doneWithTTSResolve = resolve})
 var _doneWithTTSResolve = null
 function createSpeech(text, file) {
     doneWithTTS = new Promise((resolve)=>{_doneWithTTSResolve = resolve})
     file = out_directory+"/"+file
-    if (Object.keys(speechCache).includes(text)) {
-        copyFileSync(speechCache[text], file);
-        return
-    }
     const gtts = new gTTS(text, 'en');
     
     gtts.save(file, function (err, result){
         if(err) { throw new Error(err); }
-        speechCache[text] = file;
         console.log(`"${text}" converted to speech`);
         _doneWithTTSResolve()
     });
