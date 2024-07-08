@@ -14,10 +14,12 @@
             "options_track_forward_prefix": ", skip forward ",
             "options_track_backward_prefix": ", skip backward ",
             "options_track_suffix_plural": " tracks. ",
-            "options_track_suffix_singular": " track. "
+            "options_track_suffix_singular": " track. ",
+            "request_to_pause": "Please pause and make your decision. "
         },
-        "_comment2": "All values in the 'overrides' object are the defaults, but they don't have to be(obviously).",
-        "version": 1
+        "_comment2": "All values in the 'overrides' object are the defaults, but they don't have to be(obviously). request_to_pause is only used in version 1.2.",
+        "version": 1.2,
+        "_comment3": "Version 1.1 and 1.2 are identical but 1.2 asks the user to pause after listing the options and gives only five seconds of delay after the speech"
     },
     "game": {
         "start": {

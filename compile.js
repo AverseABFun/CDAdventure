@@ -45,7 +45,8 @@ var overrides = {
     "options_track_forward_prefix": ", skip forward ",
     "options_track_backward_prefix": ", skip backward ",
     "options_track_suffix_plural": " tracks. ",
-    "options_track_suffix_singular": " track. "
+    "options_track_suffix_singular": " track. ",
+    "request_to_pause": "Please pause and make your decision. "
 }
 
 let isString = value => typeof value === 'string' || value instanceof String;
@@ -159,7 +160,7 @@ function setGameProperty(string, value) {
 }
 
 switch (getGameProperty("meta.version")) {
-    case 1:
+    case 1.1:
         assertGameHasProperty("meta.name")
         assertGameHasProperty("meta.author")
         assertGameHasProperty("game."+getGameProperty("meta.beginning"))
@@ -218,6 +219,125 @@ switch (getGameProperty("meta.version")) {
         }
         finishPlaylist(playlist, "./"+out_directory+"/"+"playlist.cue")
         break;
+    case 1.1:
+        assertGameHasProperty("meta.name")
+        assertGameHasProperty("meta.author")
+        assertGameHasProperty("game."+getGameProperty("meta.beginning"))
+        for (var item of Object.keys(getGameProperty("game"))) {
+            assertGameHasProperty(`game.${item}.speech`)
+            assertGameHasProperty(`game.${item}.options`)
+            assert(Object.keys(getGameProperty(`game.${item}.options`)).length>0, 2, `Game track ${item}'s options has a length of 0!`)
+        }
+        if (gameHasProperty("meta.overrides")) {
+            for (var item of Object.keys(getGameProperty("meta.overrides"))) {
+                assert(isString(getGameProperty(`meta.overrides.${item}`)), 2, `Overriden text ${item}'s value isn't a string!`)
+            }
+            overrides = getGameProperty("meta.overrides")
+        }
+        var keys = Object.keys(getGameProperty("game"))
+        for (var key of keys) {
+            const index = keys.indexOf(key)
+            setGameProperty(`game.${key}.speech`, getGameProperty(`game.${key}.speech`)+overrides.speech_options_separator+overrides.options_prefix)
+            var options = getGameProperty(`game.${key}.options`)
+            var options_out = ""
+            var optionsKeys = Object.keys(options)
+            for (var key2 of optionsKeys) {
+                var option = key2
+                options[option] = keys.indexOf(options[option])
+                var optionsIndex = optionsKeys.indexOf(key2)
+                if (optionsIndex != 0 && optionsIndex != optionsKeys.length-1) {
+                    option = overrides.options_item_separator+option
+                } else if (optionsIndex != 0) {
+                    option = overrides.last_options_item_separator+option
+                }
+                options_out += option
+            }
+            options_out += ". ";
+            for (var key2 of optionsKeys) {
+                var offset = (options[key2]+1)-(index+1)
+                console.log(key2)
+                console.log(offset)
+                options_out += `${overrides.options_track_prefix}${key2}${(offset)<0 ? overrides.options_track_backward_prefix : overrides.options_track_forward_prefix}${Math.abs(offset).toString()}${offset > 1 || offset < -1 ? overrides.options_track_suffix_plural : overrides.options_track_suffix_singular}`
+            }
+            setGameProperty(`game.${key}.speech`, getGameProperty(`game.${key}.speech`)+options_out)
+        }
+        var playlist = beginPlaylist();
+        var beginning = getGameProperty("meta.beginning")
+        createSpeech(getGameProperty(`game.${beginning}.speech`), beginning.replace(/(\W+)/g, '-')+".temp.mp3")
+        await doneWithTTS
+        padWithSilence("./"+out_directory+"/"+beginning.replace(/(\W+)/g, '-')+".temp.mp3", "./"+out_directory+"/"+beginning.replace(/(\W+)/g, '-')+".mp3", 20)
+        playlist = addToPlaylist(playlist, getGameProperty(`game.${beginning}.title`), "./"+beginning.replace(/(\W+)/g, '-')+".mp3")
+        for (var key of keys) {
+            if (key == beginning) {
+                continue;
+            }
+            createSpeech(getGameProperty(`game.${key}.speech`), key.replace(/(\W+)/g, '-')+".temp.mp3")
+            await doneWithTTS
+            padWithSilence("./"+out_directory+"/"+key.replace(/(\W+)/g, '-')+".temp.mp3", "./"+out_directory+"/"+key.replace(/(\W+)/g, '-')+".mp3", 20)
+            playlist = addToPlaylist(playlist, getGameProperty(`game.${key}.title`), "./"+key.replace(/(\W+)/g, '-')+".mp3")
+        }
+        finishPlaylist(playlist, "./"+out_directory+"/"+"playlist.cue")
+        break;
+    case 1.2:
+        assertGameHasProperty("meta.name")
+        assertGameHasProperty("meta.author")
+        assertGameHasProperty("game."+getGameProperty("meta.beginning"))
+        for (var item of Object.keys(getGameProperty("game"))) {
+            assertGameHasProperty(`game.${item}.speech`)
+            assertGameHasProperty(`game.${item}.options`)
+            assert(Object.keys(getGameProperty(`game.${item}.options`)).length>0, 2, `Game track ${item}'s options has a length of 0!`)
+        }
+        if (gameHasProperty("meta.overrides")) {
+            for (var item of Object.keys(getGameProperty("meta.overrides"))) {
+                assert(isString(getGameProperty(`meta.overrides.${item}`)), 2, `Overriden text ${item}'s value isn't a string!`)
+            }
+            overrides = getGameProperty("meta.overrides")
+        }
+        var keys = Object.keys(getGameProperty("game"))
+        for (var key of keys) {
+            const index = keys.indexOf(key)
+            setGameProperty(`game.${key}.speech`, getGameProperty(`game.${key}.speech`)+overrides.speech_options_separator+overrides.options_prefix)
+            var options = getGameProperty(`game.${key}.options`)
+            var options_out = ""
+            var optionsKeys = Object.keys(options)
+            for (var key2 of optionsKeys) {
+                var option = key2
+                options[option] = keys.indexOf(options[option])
+                var optionsIndex = optionsKeys.indexOf(key2)
+                if (optionsIndex != 0 && optionsIndex != optionsKeys.length-1) {
+                    option = overrides.options_item_separator+option
+                } else if (optionsIndex != 0) {
+                    option = overrides.last_options_item_separator+option
+                }
+                options_out += option
+            }
+            options_out += ". ";
+            for (var key2 of optionsKeys) {
+                var offset = (options[key2]+1)-(index+1)
+                console.log(key2)
+                console.log(offset)
+                options_out += `${overrides.options_track_prefix}${key2}${(offset)<0 ? overrides.options_track_backward_prefix : overrides.options_track_forward_prefix}${Math.abs(offset).toString()}${offset > 1 || offset < -1 ? overrides.options_track_suffix_plural : overrides.options_track_suffix_singular}`
+            }
+            options_out += overrides.request_to_pause;
+            setGameProperty(`game.${key}.speech`, getGameProperty(`game.${key}.speech`)+options_out)
+        }
+        var playlist = beginPlaylist();
+        var beginning = getGameProperty("meta.beginning")
+        createSpeech(getGameProperty(`game.${beginning}.speech`), beginning.replace(/(\W+)/g, '-')+".temp.mp3")
+        await doneWithTTS
+        padWithSilence("./"+out_directory+"/"+beginning.replace(/(\W+)/g, '-')+".temp.mp3", "./"+out_directory+"/"+beginning.replace(/(\W+)/g, '-')+".mp3", 5)
+        playlist = addToPlaylist(playlist, getGameProperty(`game.${beginning}.title`), "./"+beginning.replace(/(\W+)/g, '-')+".mp3")
+        for (var key of keys) {
+            if (key == beginning) {
+                continue;
+            }
+            createSpeech(getGameProperty(`game.${key}.speech`), key.replace(/(\W+)/g, '-')+".temp.mp3")
+            await doneWithTTS
+            padWithSilence("./"+out_directory+"/"+key.replace(/(\W+)/g, '-')+".temp.mp3", "./"+out_directory+"/"+key.replace(/(\W+)/g, '-')+".mp3", 5)
+            playlist = addToPlaylist(playlist, getGameProperty(`game.${key}.title`), "./"+key.replace(/(\W+)/g, '-')+".mp3")
+        }
+        finishPlaylist(playlist, "./"+out_directory+"/"+"playlist.cue")
+        break;
     default:
-        assert(false, 3, "Invalid version, expected 1!")
+        assert(false, 3, "Invalid version, expected 1.1 or 1.2!")
 }
