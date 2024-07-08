@@ -80,6 +80,7 @@ function padWithSilence(inputFile, outputFile, duration) {
             console.error(`Error padding file: ${error.message}`);
             return;
         }
+        rmSync(inputFile)
         if (stderr) {
             console.error(`FFmpeg stderr: ${stderr}`);
             return;
