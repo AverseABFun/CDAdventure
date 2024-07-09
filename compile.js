@@ -307,6 +307,21 @@ switch (getGameProperty("meta.version")) {
                 if (gameHasProperty(`game.${key}.end`) && getGameProperty(`game.${key}.end`)) {
                     continue
                 }
+                var regex = / ({.*?[^\\]})(?:\s|$)/gm
+                var matches = [...String(getGameProperty(`game.${key}.speech`)).matchAll(regex)]
+                var replaceString = ""
+                for (var matchIdx in matches) {
+                    if (matchIdx % 2 != 0) {
+                        replaceString = matches[matchIdx][1]
+                        continue
+                    }
+                    var match = matches[matchIdx]
+                    var matchStr = match[1]
+                    setGameProperty(`game.${key}.speech`, getGameProperty(`game.${key}.speech`).replaceAll(replaceString, keys.indexOf(matchStr)))
+                }
+                if (gameHasProperty(`game.${key}.noAppend`) && getGameProperty(`game.${key}.noAppend`)) {
+                    continue
+                }
                 const index = keys.indexOf(key)
                 setGameProperty(`game.${key}.speech`, getGameProperty(`game.${key}.speech`)+overrides.speech_options_separator+overrides.options_prefix)
                 var options = getGameProperty(`game.${key}.options`)
@@ -345,7 +360,9 @@ switch (getGameProperty("meta.version")) {
             }
             createSpeech(getGameProperty(`game.${key}.speech`), key.replace(/(\W+)/g, '-')+".temp.mp3")
             await doneWithTTS
-            padWithSilence("./"+out_directory+"/"+key.replace(/(\W+)/g, '-')+".temp.mp3", "./"+out_directory+"/"+key.replace(/(\W+)/g, '-')+".mp3", 5)
+            if (!(gameHasProperty(`game.${key}.noSilence`) && getGameProperty(`game.${key}.noSilence`))) {
+                padWithSilence("./"+out_directory+"/"+key.replace(/(\W+)/g, '-')+".temp.mp3", "./"+out_directory+"/"+key.replace(/(\W+)/g, '-')+".mp3", 5)
+            }
             playlist = addToPlaylist(playlist, gameHasProperty(`game.${key}.title`) ? getGameProperty(`game.${key}.title`) : "", "./"+key.replace(/(\W+)/g, '-')+".mp3")
         }
         finishPlaylist(playlist, "./"+out_directory+"/"+"playlist.cue")
