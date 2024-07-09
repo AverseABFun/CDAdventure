@@ -63,3 +63,7 @@ Makes this track an ending. This means it doesn't have to have any options, and 
 ### `file` (1.31 only)
 
 Replaces speech with the imported audio file. The audio file should be an mp3 and in the same folder as the game file.
+
+### `merge` and `fileVolume` (1.31 only)
+
+Merges speech and the audio file from `file`. Sets the `file` volume to the `fileVolume` without changing the original file.

@@ -86,13 +86,9 @@ function padWithSilence(inputFile, outputFile, duration) {
     });
 }
 
-function mergeFiles(inputFiles, outputFile) {
+function mergeFiles(inputFile1, inputFile2, outputFile, volume1=1) {
     if (existsSync(outputFile)) rmSync(outputFile)
-    var files = ""
-    for (var file of inputFiles) {
-        files += `-i ${file} `
-    }
-    const command = `ffmpeg ${files} -filter_complex [0:a:0][1:a:0]amix=inputs=${files.length}:duration=longest[aout] -map [aout] "${outputFile}" -y`;
+    const command = `ffmpeg -i ${inputFile1} -i ${inputFile2} -filter_complex "[0:a:0]volume=${volume1}:precision=fixed[a0];[a0][1:a]amerge=inputs=2[a]" -map [a] -ac 2 ${outputFile}`;
 
     exec(command, (error, stdout, stderr) => {
         if (error) {
@@ -106,12 +102,18 @@ async function createOutput(trackId, playlist) {
     if (version == 1.31 && gameHasProperty(`game.${trackId}.file`)) {
         var file = getGameProperty(`game.${trackId}.file`)
         var path2 = path.replace(/[a-zA-Z_\-.\s]+$/g, "")
-        file = "./"+path2+file
+        file = path2+file
         if (!file.endsWith(".mp3")) {
             console.error(`\x1b[31mError: File "${file}" is not an mp3 file. If it is, please change the file extension to mp3.\x1b[0m\x07`)
             process.exit(2)
         }
-        copyFileSync(file, "./"+out_directory+"/"+trackId.replace(/(\W+)/g, '-')+".mp3")
+        if (gameHasProperty(`game.${trackId}.merge`) && getGameProperty(`game.${trackId}.merge`) && gameHasProperty(`game.${trackId}.speech`) && gameHasProperty(`game.${trackId}.fileVolume`)) {
+            createSpeech(getGameProperty(`game.${trackId}.speech`), trackId.replace(/(\W+)/g, '-')+".temp.mp3")
+            await doneWithTTS
+            mergeFiles(file, "./"+out_directory+"/"+trackId.replace(/(\W+)/g, '-')+".temp.mp3", "./"+out_directory+"/"+trackId.replace(/(\W+)/g, '-')+".mp3", getGameProperty(`game.${trackId}.fileVolume`))
+        } else {
+            copyFileSync(file, "./"+out_directory+"/"+trackId.replace(/(\W+)/g, '-')+".mp3")
+        }
         playlist = addToPlaylist(playlist, gameHasProperty(`game.${trackId}.title`) ? getGameProperty(`game.${trackId}.title`) : "", "./"+trackId.replace(/(\W+)/g, '-')+".mp3")
     } else {
         createSpeech(getGameProperty(`game.${trackId}.speech`), trackId.replace(/(\W+)/g, '-')+".temp.mp3")
