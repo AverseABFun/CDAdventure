@@ -2,6 +2,8 @@
 
 Put a choose-your-own-adventure on a CD! Also, a warning: Don't play trench_journey. It is incredibly boring. I don't know why I made it like that. Also, there are weird spelling errors.
 
+WARNING FOR WRITERS: Version 1.3 is the only version guarenteed to work. 1.1 and 1.2 may not work and may have tons of bugs and lack new features that I am not adding. I am not fixing this, I built the code in a terrible way, but 1.3 is overall the best based on my testing and research.
+
 ## Required tools to use
 
 * ffmpeg
