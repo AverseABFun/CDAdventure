@@ -8,7 +8,7 @@ if (process.argv[2] == "--debug") {
     console.error("\x1b[31mPlease provide debug option after game. If your game file is named --debug.json, then please change it.\x1b[0m\x07")
     process.exit(1)
 }
-if (!existsSync("./games/"+process.argv[2]+".json")) {
+if (!existsSync("./games/"+process.argv[2]+".json") && !(existsSync("./games/"+process.argv[2]) && existsSync("./games/"+process.argv[2]+"/game.json"))) {
     console.error(`\x1b[31mError: Game ${process.argv[2]} does not exist!\x1b[0m\x07`)
     process.exit(1)
 }
@@ -27,7 +27,14 @@ if (process.argv.length >= 5) {
         debug = true;
     }
 }
-const game = new Object(JSON.parse(readFileSync("./games/"+process.argv[2]+".json").toString("utf8")));
+
+var path = "./games/"+process.argv[2]+".json"
+
+if (!existsSync("./games/"+process.argv[2]+".json")) {
+    path = "./games/"+process.argv[2]+"/game.json"
+}
+
+const game = new Object(JSON.parse(readFileSync(path).toString("utf8")));
 
 if (!existsSync("./"+out_directory)) {
     mkdirSync("./"+out_directory);
@@ -78,6 +85,43 @@ function padWithSilence(inputFile, outputFile, duration) {
         }
     });
 }
+
+function mergeFiles(inputFiles, outputFile) {
+    if (existsSync(outputFile)) rmSync(outputFile)
+    var files = ""
+    for (var file of inputFiles) {
+        files += `-i ${file} `
+    }
+    const command = `ffmpeg ${files} -filter_complex [0:a:0][1:a:0]amix=inputs=${files.length}:duration=longest[aout] -map [aout] "${outputFile}" -y`;
+
+    exec(command, (error, stdout, stderr) => {
+        if (error) {
+            console.error(`Error merging files: ${error.message}`);
+            return;
+        }
+    });
+}
+
+async function createOutput(trackId, playlist) {
+    if (version == 1.31 && gameHasProperty(`game.${trackId}.file`)) {
+        var file = getGameProperty(`game.${trackId}.file`)
+        var path2 = path.replace(/[a-zA-Z_\-.\s]+$/g, "")
+        file = "./"+path2+file
+        if (!file.endsWith(".mp3")) {
+            console.error(`\x1b[31mError: File "${file}" is not an mp3 file. If it is, please change the file extension to mp3.\x1b[0m\x07`)
+            process.exit(2)
+        }
+        copyFileSync(file, "./"+out_directory+"/"+trackId.replace(/(\W+)/g, '-')+".mp3")
+        playlist = addToPlaylist(playlist, gameHasProperty(`game.${trackId}.title`) ? getGameProperty(`game.${trackId}.title`) : "", "./"+trackId.replace(/(\W+)/g, '-')+".mp3")
+    } else {
+        createSpeech(getGameProperty(`game.${trackId}.speech`), trackId.replace(/(\W+)/g, '-')+".temp.mp3")
+        await doneWithTTS
+        padWithSilence("./"+out_directory+"/"+trackId.replace(/(\W+)/g, '-')+".temp.mp3", "./"+out_directory+"/"+trackId.replace(/(\W+)/g, '-')+".mp3", 5)
+        playlist = addToPlaylist(playlist, gameHasProperty(`game.${trackId}.title`) ? getGameProperty(`game.${trackId}.title`) : "", "./"+trackId.replace(/(\W+)/g, '-')+".mp3")
+    }
+    return playlist
+}
+
 function beginPlaylist() {
     return {
         "tracks": 0,
@@ -151,15 +195,20 @@ function setGameProperty(string, value) {
     item[string.split(".")[stringSplit.length]] = value
 }
 
-switch (getGameProperty("meta.version")) {
+const version = getGameProperty("meta.version")
+
+switch (version) {
     case 1.3:
+    case 1.31:
         var keys = Object.keys(getGameProperty("game"))
         if (!debug) {
             assertGameHasProperty("meta.name")
             assertGameHasProperty("meta.author")
             assertGameHasProperty("game."+getGameProperty("meta.beginning"))
             for (var item of Object.keys(getGameProperty("game"))) {
-                assertGameHasProperty(`game.${item}.speech`)
+                if (!(version == 1.31 && gameHasProperty(`game.${item}.file`))) {
+                    assertGameHasProperty(`game.${item}.speech`)
+                }
                 if (gameHasProperty(`game.${key}.options`)) {
                     assert(Object.keys(getGameProperty(`game.${item}.options`)).length>0, 2, `Game track ${item}'s options has a length of 0!`)
                 }
@@ -171,6 +220,9 @@ switch (getGameProperty("meta.version")) {
                 overrides = getGameProperty("meta.overrides")
             }
             for (var key of keys) {
+                if (version == 1.31 && gameHasProperty(`game.${item}.file`) && !gameHasProperty(`game.${item}.merge`)) {
+                    continue
+                }
                 var regex = / ({.*?[^\\]})(?:\s|$)/m
                 var matches = String(getGameProperty(`game.${key}.speech`)).match(regex)
                 if (matches != null) {
@@ -212,26 +264,12 @@ switch (getGameProperty("meta.version")) {
         }
         var playlist = beginPlaylist();
         var beginning = getGameProperty("meta.beginning")
-        createSpeech(getGameProperty(`game.${beginning}.speech`), beginning.replace(/(\W+)/g, '-')+".temp.mp3")
-        await doneWithTTS
-        padWithSilence("./"+out_directory+"/"+beginning.replace(/(\W+)/g, '-')+".temp.mp3", "./"+out_directory+"/"+beginning.replace(/(\W+)/g, '-')+".mp3", 5)
-        playlist = addToPlaylist(playlist, gameHasProperty(`game.${beginning}.title`) ? getGameProperty(`game.${beginning}.title`) : "", "./"+beginning.replace(/(\W+)/g, '-')+".mp3")
+        playlist = await createOutput(beginning, playlist)
         for (var key of keys) {
             if (key == beginning) {
                 continue;
             }
-            createSpeech(getGameProperty(`game.${key}.speech`), key.replace(/(\W+)/g, '-')+".temp.mp3")
-            await doneWithTTS
-            if (!(gameHasProperty(`game.${key}.noSilence`) && getGameProperty(`game.${key}.noSilence`))) {
-                if (!gameHasProperty(`game.${key}.silenceLength`)) {
-                    padWithSilence("./"+out_directory+"/"+key.replace(/(\W+)/g, '-')+".temp.mp3", "./"+out_directory+"/"+key.replace(/(\W+)/g, '-')+".mp3", 5)
-                } else {
-                    padWithSilence("./"+out_directory+"/"+key.replace(/(\W+)/g, '-')+".temp.mp3", "./"+out_directory+"/"+key.replace(/(\W+)/g, '-')+".mp3", getGameProperty(`game.${key}.silenceLength`))
-                }
-            } else {
-                copyFileSync("./"+out_directory+"/"+key.replace(/(\W+)/g, '-')+".temp.mp3", "./"+out_directory+"/"+key.replace(/(\W+)/g, '-')+".mp3")
-            }
-            playlist = addToPlaylist(playlist, gameHasProperty(`game.${key}.title`) ? getGameProperty(`game.${key}.title`) : "", "./"+key.replace(/(\W+)/g, '-')+".mp3")
+            playlist = await createOutput(key, playlist)
         }
         finishPlaylist(playlist, "./"+out_directory+"/"+"playlist.cue")
         if (keys.length >= 100) {
