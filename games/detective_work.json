@@ -135,7 +135,7 @@
             "speech": "You examine the broken window. It's shattered, but you notice a fingerprint on the frame. You record it, and note it as type RL. Something catches your eye out the window and when you look over at it, you are horrified to discover a man clutching a knife in his white, boney hands. As you look at him, he looks at you, and you see a glint of malice in his eyes. You quickly write down his description before he begins running towards you. He vaults up the two stories and you begin to run as fast as you can out the door. You hear him behind you, but you focus on what's in front of you and you see a hotel cart. You have to dodge, quickly! Skip two tracks ahead!",
             "title": "Pursued",
             "noAppend": true,
-            "noSilence": true
+            "silenceLength": 1
         },
         "failed_quick_time_event_1": {
             "speech": "You run straight into a hotel cart and fall to the ground. You look behind you and see the killer standing over you. He raises his knife, and you close your eyes. You hear the knife come down, and then you feel nothing. You have failed the case. Game over. Skip back to track 1 to start again.",
@@ -169,7 +169,7 @@
             "speech": "You check the knocked-over chair. As you do, you hear a noise behind you. You turn around and see a pale man holding a knife outside the broken window. He looks at you, and you see a glint of malice in his eyes. You quickly write down his description before he begins running towards you. He vaults up the two stories and you begin to run as fast as you can out the door. You hear him behind you, but you focus on what's in front of you and you see a hotel cart. You have to dodge, quickly! Skip two tracks ahead!",
             "title": "Pursued",
             "noAppend": true,
-            "noSilence": true
+            "silenceLength": 1
         },
         "failed_quick_time_event_2": {
             "speech": "You run straight into a hotel cart and fall to the ground. You look behind you and see the killer standing over you. He raises his knife, and you close your eyes. You hear the knife come down, and then you feel nothing. You have failed the case. Game over. Skip back to track 1 to start again.",
@@ -185,7 +185,7 @@
             "speech": "You look at the blood, and you notice that it's a different color than the blood from the first day. You also notice that it's a different type of blood. You note that it's a type of blood that's only found in one place in town: the butcher shop. You soon hear a noise behind you, and you turn around. You see a pale man holding a knife outside the broken window. He looks at you, and you see a glint of malice in his eyes. You quickly write down his description before he begins running towards you. He vaults up the two stories and you begin to run as fast as you can out the door. You hear him behind you, but you focus on what's in front of you and you see a hotel cart. You have to dodge, quickly! Skip two tracks ahead!",
             "title": "Pursued",
             "noAppend": true,
-            "noSilence": true
+            "silenceLength": 1
         },
         "failed_quick_time_event_3": {
             "speech": "You run straight into a hotel cart and fall to the ground. You look behind you and see the killer standing over you. He raises his knife, and you close your eyes. You hear the knife come down, and then you feel nothing. You have failed the case. Game over. Skip back to track 1 to start again.",

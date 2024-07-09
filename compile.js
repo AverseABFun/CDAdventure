@@ -62,7 +62,7 @@ function createSpeech(text, file) {
     
     gtts.save(file, function (err, result){
         if(err) { throw new Error(err); }
-        console.log(`"${text}" converted to speech`);
+        //console.log(`"${text}" converted to speech`);
         _doneWithTTSResolve()
     });
 }
@@ -74,10 +74,6 @@ function padWithSilence(inputFile, outputFile, duration) {
     exec(command, (error, stdout, stderr) => {
         if (error) {
             console.error(`Error padding file: ${error.message}`);
-            return;
-        }
-        if (stderr) {
-            console.error(`FFmpeg stderr: ${stderr}`);
             return;
         }
     });
@@ -306,17 +302,12 @@ switch (getGameProperty("meta.version")) {
                 if (gameHasProperty(`game.${key}.end`) && getGameProperty(`game.${key}.end`)) {
                     continue
                 }
-                var regex = / ({.*?[^\\]})(?:\s|$)/gm
-                var matches = [...String(getGameProperty(`game.${key}.speech`)).matchAll(regex)]
-                var replaceString = ""
-                for (var matchIdx in matches) {
-                    if (matchIdx % 2 != 0) {
-                        replaceString = matches[matchIdx][1]
-                        continue
-                    }
-                    var match = matches[matchIdx]
-                    var matchStr = match[1]
-                    setGameProperty(`game.${key}.speech`, getGameProperty(`game.${key}.speech`).replaceAll(replaceString, keys.indexOf(matchStr)))
+                var regex = / ({.*?[^\\]})(?:\s|$)/m
+                var matches = String(getGameProperty(`game.${key}.speech`)).match(regex)
+                if (matches != null) {
+                    console.log(getGameProperty(`game.${key}.speech`))
+                    setGameProperty(`game.${key}.speech`, getGameProperty(`game.${key}.speech`).replace(matches[0], keys.indexOf(matches[0].replace(" {","").replace("} ",""))+1))
+                    console.log(getGameProperty(`game.${key}.speech`))
                 }
                 if (gameHasProperty(`game.${key}.noAppend`) && getGameProperty(`game.${key}.noAppend`)) {
                     continue
@@ -360,7 +351,13 @@ switch (getGameProperty("meta.version")) {
             createSpeech(getGameProperty(`game.${key}.speech`), key.replace(/(\W+)/g, '-')+".temp.mp3")
             await doneWithTTS
             if (!(gameHasProperty(`game.${key}.noSilence`) && getGameProperty(`game.${key}.noSilence`))) {
-                padWithSilence("./"+out_directory+"/"+key.replace(/(\W+)/g, '-')+".temp.mp3", "./"+out_directory+"/"+key.replace(/(\W+)/g, '-')+".mp3", 5)
+                if (!gameHasProperty(`game.${key}.silenceLength`)) {
+                    padWithSilence("./"+out_directory+"/"+key.replace(/(\W+)/g, '-')+".temp.mp3", "./"+out_directory+"/"+key.replace(/(\W+)/g, '-')+".mp3", 5)
+                } else {
+                    padWithSilence("./"+out_directory+"/"+key.replace(/(\W+)/g, '-')+".temp.mp3", "./"+out_directory+"/"+key.replace(/(\W+)/g, '-')+".mp3", getGameProperty(`game.${key}.silenceLength`))
+                }
+            } else {
+                copyFileSync("./"+out_directory+"/"+key.replace(/(\W+)/g, '-')+".temp.mp3", "./"+out_directory+"/"+key.replace(/(\W+)/g, '-')+".mp3")
             }
             playlist = addToPlaylist(playlist, gameHasProperty(`game.${key}.title`) ? getGameProperty(`game.${key}.title`) : "", "./"+key.replace(/(\W+)/g, '-')+".mp3")
         }
