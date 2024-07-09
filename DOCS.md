@@ -1,6 +1,8 @@
 # Documentation for writing games
 
-All games are written in json in the games directory. Please do not have spaces in the game name, as this will render it uncompilable until you rename it. This documentation is only for the latest version(currently 1.3) and earlier version will likely be added as special modes in future versions. Also note that all fields the compiler doesn't recognize, it ignores.
+All games are written in json in the games directory. Please do not have spaces in the game name, as this will render it uncompilable until you rename it. This documentation is only for the latest version(currently 1.3(1)) and earlier version will likely be added as special modes in future versions. Also note that all fields the compiler doesn't recognize, it ignores.
+
+As of adding 1.31, the game file argument passed to the compiler can now be a directory with a game.json file in it. This is true for 1.3 and 1.31.
 
 ## `meta`
 
@@ -28,7 +30,7 @@ Contains all overrides for built-in text. See `games/test_game.json` for all key
 
 ### `version`
 
-Currently please keep this at 1.3, as 1.1 and 1.2 have been deprecated.
+Currently please keep this at 1.3 or 1.31, as 1.1 and 1.2 have been deprecated.
 
 ## `game`
 
@@ -57,3 +59,7 @@ Makes the compiler add this length of a delay to the end of the track instead of
 ### `end`
 
 Makes this track an ending. This means it doesn't have to have any options, and essentially enables `noAppend`.
+
+### `file` (1.31 only)
+
+Replaces speech with the imported audio file. The audio file should be an mp3 and in the same folder as the game file.
