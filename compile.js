@@ -292,10 +292,14 @@ switch (getGameProperty("meta.version")) {
             assertGameHasProperty("game."+getGameProperty("meta.beginning"))
             for (var item of Object.keys(getGameProperty("game"))) {
                 assertGameHasProperty(`game.${item}.speech`)
-                if (!(gameHasProperty(`game.${item}.end`) && getGameProperty(`game.${item}.end`))) {
-                    assertGameHasProperty(`game.${item}.options`)
-                    assert(Object.keys(getGameProperty(`game.${item}.options`)).length>0, 2, `Game track ${item}'s options has a length of 0!`)
+                if (gameHasProperty(`game.${item}.end`) && getGameProperty(`game.${item}.end`)) {
+                    continue
                 }
+                if (gameHasProperty(`game.${key}.noAppend`) && getGameProperty(`game.${key}.noAppend`)) {
+                    continue
+                }
+                assertGameHasProperty(`game.${item}.options`)
+                assert(Object.keys(getGameProperty(`game.${item}.options`)).length>0, 2, `Game track ${item}'s options has a length of 0!`)
             }
             if (gameHasProperty("meta.overrides")) {
                 for (var item of Object.keys(getGameProperty("meta.overrides"))) {
