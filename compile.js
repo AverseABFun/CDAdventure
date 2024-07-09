@@ -171,9 +171,6 @@ switch (getGameProperty("meta.version")) {
                 overrides = getGameProperty("meta.overrides")
             }
             for (var key of keys) {
-                if (gameHasProperty(`game.${key}.end`) && getGameProperty(`game.${key}.end`)) {
-                    continue
-                }
                 var regex = / ({.*?[^\\]})(?:\s|$)/m
                 var matches = String(getGameProperty(`game.${key}.speech`)).match(regex)
                 if (matches != null) {
@@ -182,6 +179,9 @@ switch (getGameProperty("meta.version")) {
                     console.log(getGameProperty(`game.${key}.speech`))
                 }
                 if (gameHasProperty(`game.${key}.noAppend`) && getGameProperty(`game.${key}.noAppend`)) {
+                    continue
+                }
+                if (gameHasProperty(`game.${key}.end`) && getGameProperty(`game.${key}.end`)) {
                     continue
                 }
                 const index = keys.indexOf(key)
