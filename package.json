@@ -3,5 +3,29 @@
     "@ffmpeg-binary/ffmpeg": "^2.0.1",
     "gtts": "^0.2.1"
   },
-  "type": "module"
+  "type": "module",
+  "name": "cdadventure",
+  "version": "1.0.0",
+  "description": "Make choose-your-own-adventures on CDs!",
+  "main": "compile.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AverseABFun/CDAdventure.git"
+  },
+  "keywords": [
+    "compiler",
+    "cd",
+    "choose-your-own-adventure",
+    "text-adventure"
+  ],
+  "author": "Averse",
+  "license": "AGPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/AverseABFun/CDAdventure/issues"
+  },
+  "homepage": "https://github.com/AverseABFun/CDAdventure#readme"
 }
