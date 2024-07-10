@@ -1,8 +1,8 @@
 # Documentation for writing games
 
-All games are written in json in the games directory. Please do not have spaces in the game name, as this will render it uncompilable until you rename it. This documentation is only for the latest version(currently 1.3(1)) and earlier version will likely be added as special modes in future versions. Also note that all fields the compiler doesn't recognize, it ignores.
+All games are written in json in the games directory. Please do not have spaces in the game name, as this will render it uncompilable until you rename it. This documentation is only for the latest version(currently 1.3-1.32) and earlier version will likely be added as special modes in future versions. Also note that all fields the compiler doesn't recognize, it ignores.
 
-As of adding 1.31, the game file argument passed to the compiler can now be a directory with a game.json file in it. This is true for 1.3 and 1.31.
+As of adding 1.31, the game file argument passed to the compiler can now be a directory with a game.json file in it. This is true for 1.3-1.32.
 
 ## `meta`
 
@@ -28,9 +28,13 @@ Contains the id of the starting track. This track will be automatically moved to
 
 Contains all overrides for built-in text. See `games/test_game.json` for all keys and their default values
 
+### `defaults` (1.32+ only)
+
+Contains defaults for any properties. This can contain some of the game properties, mostly only the new 1.31 properties.
+
 ### `version`
 
-Currently please keep this at 1.3 or 1.31, as 1.1 and 1.2 have been deprecated.
+Currently please keep this between 1.3 and 1.32, as 1.1 and 1.2 have been deprecated.
 
 ## `game`
 
@@ -60,10 +64,10 @@ Makes the compiler add this length of a delay to the end of the track instead of
 
 Makes this track an ending. This means it doesn't have to have any options, and essentially enables `noAppend`.
 
-### `file` (1.31 only)
+### `file` (1.31+ only)
 
 Replaces speech with the imported audio file. The audio file should be an mp3 and in the same folder as the game file.
 
-### `merge` and `fileVolume` (1.31 only)
+### `merge` and `fileVolume` (1.31+ only)
 
 Merges speech and the audio file from `file`. Sets the `file` volume to the `fileVolume` without changing the original file.

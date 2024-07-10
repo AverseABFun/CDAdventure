@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, mkdirSync, copyFileSync, writeFileSync, rmSync } from 'fs';
+import { existsSync, readFileSync, mkdirSync, copyFileSync, writeFileSync, rmSync, renameSync } from 'fs';
 
 if (process.argv.length<3) {
     console.error("\x1b[31mError: No game provided!\x1b[0m\x07")
@@ -34,7 +34,7 @@ if (!existsSync("./games/"+process.argv[2]+".json")) {
     path = "./games/"+process.argv[2]+"/game.json"
 }
 
-const game = new Object(JSON.parse(readFileSync(path).toString("utf8")));
+var game = new Object(JSON.parse(readFileSync(path).toString("utf8")));
 
 if (!existsSync("./"+out_directory)) {
     mkdirSync("./"+out_directory);
@@ -74,11 +74,15 @@ function createSpeech(text, file) {
     });
 }
 
+var padPromise = new Promise((resolve)=>{_padResolve = resolve})
+var _padResolve = null
 function padWithSilence(inputFile, outputFile, duration) {
+    padPromise = new Promise((resolve)=>{_padResolve = resolve})
     if (existsSync(outputFile)) rmSync(outputFile)
     const command = `ffmpeg -f lavfi -t ${duration} -i anullsrc=channel_layout=stereo:sample_rate=44100 -i ${inputFile} -filter_complex "[1:a][0:a]concat=n=2:v=0:a=1" ${outputFile}`;
 
     exec(command, (error, stdout, stderr) => {
+        _padResolve()
         if (error) {
             console.error(`Error padding file: ${error.message}`);
             return;
@@ -86,11 +90,18 @@ function padWithSilence(inputFile, outputFile, duration) {
     });
 }
 
+var mergePromise = new Promise((resolve)=>{_mergeResolve = resolve})
+var _mergeResolve = null
+var merging = false
 function mergeFiles(inputFile1, inputFile2, outputFile, volume1=1) {
+    merging = true
+    mergePromise = new Promise((resolve)=>{_mergeResolve = resolve})
     if (existsSync(outputFile)) rmSync(outputFile)
-    const command = `ffmpeg -i ${inputFile1} -i ${inputFile2} -filter_complex "[0:a:0]volume=${volume1}:precision=fixed[a0];[a0][1:a]amerge=inputs=2[a]" -map [a] -ac 2 ${outputFile}`;
+    const command = `ffmpeg -i ${inputFile1} -i ${inputFile2} -filter_complex "[0:a:0]volume=${volume1}:precision=fixed[a0]; [a0]aloop=loop=-1:size=2e+09[a1]; [1:a][a1]amix=duration=shortest[a]" -map [a] -ac 2 ${outputFile}`;
 
     exec(command, (error, stdout, stderr) => {
+        _mergeResolve()
+        merging = false
         if (error) {
             console.error(`Error merging files: ${error.message}`);
             return;
@@ -99,18 +110,29 @@ function mergeFiles(inputFile1, inputFile2, outputFile, volume1=1) {
 }
 
 async function createOutput(trackId, playlist) {
-    if (version == 1.31 && gameHasProperty(`game.${trackId}.file`)) {
+    if (version >= 1.31 && (gameHasProperty(`game.${trackId}.file`) || gameHasProperty(`meta.defaults.file`))) {
         var file = getGameProperty(`game.${trackId}.file`)
+        if (version >= 1.32 && file == undefined) {
+            if (gameHasProperty(`meta.defaults.file`)) {
+                file = getGameProperty(`meta.defaults.file`)
+            }
+        }
         var path2 = path.replace(/[a-zA-Z_\-.\s]+$/g, "")
         file = path2+file
         if (!file.endsWith(".mp3")) {
             console.error(`\x1b[31mError: File "${file}" is not an mp3 file. If it is, please change the file extension to mp3.\x1b[0m\x07`)
             process.exit(2)
         }
-        if (gameHasProperty(`game.${trackId}.merge`) && getGameProperty(`game.${trackId}.merge`) && gameHasProperty(`game.${trackId}.speech`) && gameHasProperty(`game.${trackId}.fileVolume`)) {
+        if (((gameHasProperty(`game.${trackId}.merge`) && getGameProperty(`game.${trackId}.merge`)) || (gameHasProperty(`meta.defaults.merge`) && getGameProperty(`meta.defaults.merge`))) && gameHasProperty(`game.${trackId}.speech`) && (gameHasProperty(`game.${trackId}.fileVolume`) || gameHasProperty(`meta.defaults.fileVolume`))) {
             createSpeech(getGameProperty(`game.${trackId}.speech`), trackId.replace(/(\W+)/g, '-')+".temp.mp3")
             await doneWithTTS
-            mergeFiles(file, "./"+out_directory+"/"+trackId.replace(/(\W+)/g, '-')+".temp.mp3", "./"+out_directory+"/"+trackId.replace(/(\W+)/g, '-')+".mp3", getGameProperty(`game.${trackId}.fileVolume`))
+            if (gameHasProperty(`game.${trackId}.silenceLength`)) {
+                padWithSilence("./"+out_directory+"/"+trackId.replace(/(\W+)/g, '-')+".temp.mp3", "./"+out_directory+"/"+trackId.replace(/(\W+)/g, '-')+".mp3", getGameProperty(`game.${trackId}.silenceLength`))
+                await padPromise
+                rmSync("./"+out_directory+"/"+trackId.replace(/(\W+)/g, '-')+".temp.mp3")
+                renameSync("./"+out_directory+"/"+trackId.replace(/(\W+)/g, '-')+".mp3", "./"+out_directory+"/"+trackId.replace(/(\W+)/g, '-')+".temp.mp3")
+            }
+            mergeFiles(file, "./"+out_directory+"/"+trackId.replace(/(\W+)/g, '-')+".temp.mp3", "./"+out_directory+"/"+trackId.replace(/(\W+)/g, '-')+".mp3", getGameProperty(`game.${trackId}.fileVolume`) || getGameProperty(`meta.defaults.fileVolume`))
         } else {
             copyFileSync(file, "./"+out_directory+"/"+trackId.replace(/(\W+)/g, '-')+".mp3")
         }
@@ -199,16 +221,29 @@ function setGameProperty(string, value) {
 
 const version = getGameProperty("meta.version")
 
+var defaults = {}
+
 switch (version) {
     case 1.3:
     case 1.31:
+    case 1.32:
         var keys = Object.keys(getGameProperty("game"))
         if (!debug) {
             assertGameHasProperty("meta.name")
             assertGameHasProperty("meta.author")
             assertGameHasProperty("game."+getGameProperty("meta.beginning"))
+            if (version >= 1.32 && gameHasProperty("meta.defaults")) {
+                defaults = getGameProperty("meta.defaults")
+            }
             for (var item of Object.keys(getGameProperty("game"))) {
-                if (!(version == 1.31 && gameHasProperty(`game.${item}.file`))) {
+                if (version >= 1.32) {
+                    for (var defaul of Object.keys(defaults)) {
+                        if (!gameHasProperty(`game.${item}.${defaul}`)) {
+                            setGameProperty(`game.${item}.${defaul}`, defaults[item])
+                        }
+                    }
+                }
+                if (!(version >= 1.31 && gameHasProperty(`game.${item}.file`))) {
                     assertGameHasProperty(`game.${item}.speech`)
                 }
                 if (gameHasProperty(`game.${key}.options`)) {
@@ -222,7 +257,7 @@ switch (version) {
                 overrides = getGameProperty("meta.overrides")
             }
             for (var key of keys) {
-                if (version == 1.31 && gameHasProperty(`game.${item}.file`) && !gameHasProperty(`game.${item}.merge`)) {
+                if (version >= 1.31 && gameHasProperty(`game.${item}.file`) && !gameHasProperty(`game.${item}.merge`)) {
                     continue
                 }
                 var regex = / ({.*?[^\\]})(?:\s|$)/m
@@ -279,5 +314,5 @@ switch (version) {
         }
         break;
     default:
-        assert(false, 3, "Invalid version, expected 1.3! Note: If you are for some reason trying to compile a 1.1 or 1.2 game(which shouldn't be possible), 1.1 and 1.2 have been removed from the compiler.")
+        assert(false, 3, "Invalid version, expected 1.3-1.32! Note: If you are for some reason trying to compile a 1.1 or 1.2 game(which shouldn't be possible), 1.1 and 1.2 have been removed from the compiler.")
 }
