@@ -1,4 +1,5 @@
 import { existsSync, readFileSync, mkdirSync, copyFileSync, writeFileSync, rmSync, renameSync } from 'fs';
+import ffmpeg from '@ffmpeg-binary/ffmpeg';
 
 if (process.argv.length<3) {
     console.error("\x1b[31mError: No game provided!\x1b[0m\x07")
@@ -79,7 +80,7 @@ var _padResolve = null
 function padWithSilence(inputFile, outputFile, duration) {
     padPromise = new Promise((resolve)=>{_padResolve = resolve})
     if (existsSync(outputFile)) rmSync(outputFile)
-    const command = `ffmpeg -f lavfi -t ${duration} -i anullsrc=channel_layout=stereo:sample_rate=44100 -i ${inputFile} -filter_complex "[1:a][0:a]concat=n=2:v=0:a=1" ${outputFile}`;
+    const command = `${ffmpeg} -f lavfi -t ${duration} -i anullsrc=channel_layout=stereo:sample_rate=44100 -i ${inputFile} -filter_complex "[1:a][0:a]concat=n=2:v=0:a=1" ${outputFile}`;
 
     exec(command, (error, stdout, stderr) => {
         _padResolve()
@@ -97,7 +98,7 @@ function mergeFiles(inputFile1, inputFile2, outputFile, volume1=1) {
     merging = true
     mergePromise = new Promise((resolve)=>{_mergeResolve = resolve})
     if (existsSync(outputFile)) rmSync(outputFile)
-    const command = `ffmpeg -i ${inputFile1} -i ${inputFile2} -filter_complex "[0:a:0]volume=${volume1}:precision=fixed[a0]; [a0]aloop=loop=-1:size=2e+09[a1]; [1:a][a1]amix=duration=shortest[a]" -map [a] -ac 2 ${outputFile}`;
+    const command = `${ffmpeg} -i ${inputFile1} -i ${inputFile2} -filter_complex "[0:a:0]volume=${volume1}:precision=fixed[a0]; [a0]aloop=loop=-1:size=2e+09[a1]; [1:a][a1]amix=duration=shortest[a]" -map [a] -ac 2 ${outputFile}`;
 
     exec(command, (error, stdout, stderr) => {
         _mergeResolve()

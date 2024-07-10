@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@ffmpeg-binary/ffmpeg": "^2.0.1",
     "gtts": "^0.2.1"
   },
   "type": "module"
