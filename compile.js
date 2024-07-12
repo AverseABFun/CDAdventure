@@ -127,12 +127,12 @@ async function createOutput(trackId, playlist) {
         if (((gameHasProperty(`game.${trackId}.merge`) && getGameProperty(`game.${trackId}.merge`)) || (gameHasProperty(`meta.defaults.merge`) && getGameProperty(`meta.defaults.merge`))) && gameHasProperty(`game.${trackId}.speech`) && (gameHasProperty(`game.${trackId}.fileVolume`) || gameHasProperty(`meta.defaults.fileVolume`))) {
             createSpeech(getGameProperty(`game.${trackId}.speech`), trackId.replace(/(\W+)/g, '-')+".temp.mp3")
             await doneWithTTS
-            if (gameHasProperty(`game.${trackId}.silenceLength`)) {
-                padWithSilence("./"+out_directory+"/"+trackId.replace(/(\W+)/g, '-')+".temp.mp3", "./"+out_directory+"/"+trackId.replace(/(\W+)/g, '-')+".mp3", getGameProperty(`game.${trackId}.silenceLength`))
-                await padPromise
-                rmSync("./"+out_directory+"/"+trackId.replace(/(\W+)/g, '-')+".temp.mp3")
-                renameSync("./"+out_directory+"/"+trackId.replace(/(\W+)/g, '-')+".mp3", "./"+out_directory+"/"+trackId.replace(/(\W+)/g, '-')+".temp.mp3")
-            }
+
+            padWithSilence("./"+out_directory+"/"+trackId.replace(/(\W+)/g, '-')+".temp.mp3", "./"+out_directory+"/"+trackId.replace(/(\W+)/g, '-')+".mp3", getGameProperty(`game.${trackId}.silenceLength`, false) || (getGameProperty(`meta.defaults.silenceLength`, false) || 5))
+            await padPromise
+
+            rmSync("./"+out_directory+"/"+trackId.replace(/(\W+)/g, '-')+".temp.mp3")
+            renameSync("./"+out_directory+"/"+trackId.replace(/(\W+)/g, '-')+".mp3", "./"+out_directory+"/"+trackId.replace(/(\W+)/g, '-')+".temp.mp3")
             mergeFiles(file, "./"+out_directory+"/"+trackId.replace(/(\W+)/g, '-')+".temp.mp3", "./"+out_directory+"/"+trackId.replace(/(\W+)/g, '-')+".mp3", getGameProperty(`game.${trackId}.fileVolume`) || getGameProperty(`meta.defaults.fileVolume`))
         } else {
             copyFileSync(file, "./"+out_directory+"/"+trackId.replace(/(\W+)/g, '-')+".mp3")
@@ -201,12 +201,17 @@ function assertGameHasProperty(string) {
     return true
 }
 
-function getGameProperty(string) {
-    assertGameHasProperty(string);
+function getGameProperty(string, shouldAssert=true) {
+    if (shouldAssert) {
+        assertGameHasProperty(string)
+    }
     var stringSplit = string.split(".")
     var item = game
     for (var split of stringSplit) {
         item = item[split]
+    }
+    if (!item) {
+        return 0
     }
     return item
 }
