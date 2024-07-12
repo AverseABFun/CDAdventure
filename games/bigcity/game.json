@@ -1,0 +1,338 @@
+{
+    "meta": {
+        "name": "The Big City",
+        "beginning": "title",
+        "author": "Arthur",
+        "defaults": {
+            "merge": true,
+            "fileVolume": 0.1
+        },
+        "version": 1.32
+    },
+    "game": {
+        "title": {
+            "speech": "The Big City: A CDAdventure by Arthur Beck.",
+            "file": "bobdylan_base.mp3",
+            "fileVolume": 0.2,
+            "options": {
+                "start the game": "start"
+            }
+        },
+        "start": {
+            "speech": "You are the famous musician Barry Zeppelin. You have just arrived in the famed Zedel City to play a concert. You are staying at the luxurious Yexel Hotel. You have a few hours before the concert. What would you like to do? Your concert is at 8:00 PM and it is currently 6:00 PM.",
+            "file": "bobdylan2.mp3",
+            "options": {
+                "look around your room": "room",
+                "go to the concert hall": "hall",
+                "explore the city a little": "city"
+            }
+        },
+        "room": {
+            "speech": "You are in a luxurious hotel room. The walls are painted a deep red. There is a large bed, a desk, and a TV. You see a note on the desk. What would you like to do?",
+            "file": "bobdylan3.mp3",
+            "options": {
+                "read the note": "note",
+                "go to the concert hall": "hall",
+                "explore the city a little": "city"
+            }
+        },
+        "note": {
+            "speech": "The note reads: 'Dear Barry, I hope you enjoy your stay at the Yexel Hotel. Your concert is at 8:00 PM. Please be there on time. Sincerely, your assistant.'",
+            "file": "bobdylan4.mp3",
+            "options": {
+                "go to the concert hall": "hall",
+                "explore the city a little": "city"
+            }
+        },
+        "hall": {
+            "speech": "You arrive at the concert hall. It is a grand building with a large stage and rows of seats. The concert is in a few hours. What would you like to do?",
+            "file": "bobdylan3.mp3",
+            "options": {
+                "rehearse for the concert": "rehearse",
+                "prepare for the concert": "prepare",
+                "explore the city": "city"
+            }
+        },
+        "rehearse": {
+            "speech": "You are already ready for the concert. You don't need to rehearse.",
+            "file": "bobdylan4.mp3",
+            "options": {
+                "go to the concert hall": "hall",
+                "explore the city": "city"
+            }
+        },
+        "city": {
+            "speech": "You walk out of the hotel and into the bustling streets of Zedel City. You see people walking, cars driving, and shops selling all kinds of things. What would you like to do?",
+            "file": "bobdylan3.mp3",
+            "options": {
+                "go to the concert hall": "hall",
+                "explore the city more": "city2"
+            }
+        },
+        "city2": {
+            "speech": "You walk around the city some more. You see a park, a museum, and a cafe. What would you like to do?",
+            "file": "bobdylan3.mp3",
+            "options": {
+                "go to the park": "park",
+                "go to the museum": "museum",
+                "go to the cafe": "cafe",
+                "go to the concert hall": "hall"
+            }
+        },
+        "park": {
+            "speech": "You walk to the park and sit on a bench. It is a peaceful place with trees, flowers, and a fountain. What would you like to do?",
+            "file": "bobdylan4.mp3",
+            "options": {
+                "go to the museum": "museum",
+                "go to the cafe": "cafe",
+                "go to the concert hall": "hall"
+            }
+        },
+        "museum": {
+            "speech": "You enter the museum and see all kinds of art and artifacts. It is a quiet and interesting place. What would you like to do?",
+            "file": "bobdylan4.mp3",
+            "options": {
+                "go to the park": "park",
+                "go to the cafe": "cafe",
+                "go to the concert hall": "hall"
+            }
+        },
+        "cafe": {
+            "speech": "You enter the cafe and order a coffee. It is a cozy place with soft music playing. What would you like to do?",
+            "file": "bobdylan4.mp3",
+            "options": {
+                "go to the park": "park",
+                "go to the museum": "museum",
+                "go to the concert hall": "hall"
+            }
+        },
+        "prepare": {
+            "speech": "You help setup the equipment, and tune your guitar. You are ready for the concert, and it's almost time. What would you like to do?",
+            "file": "bobdylan4.mp3",
+            "options": {
+                "go on stage": "stage1",
+                "invite in VIPs to the concert": "vips"
+            }
+        },
+        "stage1": {
+            "speech": "It's around 7:30 PM, it isn't time yet.",
+            "file": "bobdylan5.mp3",
+            "options": {
+                "invite in VIPs to the concert": "vips"
+            }
+        },
+        "vips": {
+            "speech": "You invite in some VIPs to the concert. They are impressed by the setup and are excited for the show. They ask you questions and you respond to them, but you have to cut it short as it's almost time for the concert. What would you like to do?",
+            "file": "bobdylan6.mp3",
+            "options": {
+                "go on stage": "stage2"
+            }
+        },
+        "stage2": {
+            "speech": "You go on stage and the crowd cheers. You play your songs and the audience loves it. The concert is a success. What would you like to do?",
+            "file": "bobdylan7.mp3",
+            "options": {
+                "head to the after party": "party"
+            }
+        },
+        "party": {
+            "speech": "You head to the after party and celebrate with your fans and friends. It is a fun and lively event. What would you like to do?",
+            "file": "bobdylan8.mp3",
+            "options": {
+                "explore the city and go to bed": "bed"
+            }
+        },
+        "bed": {
+            "speech": "You explore the city a little more and then head back to the hotel. You are tired from the concert and ready to rest. You go to bed and fall asleep.",
+            "file": "bobdylan9.mp3",
+            "options": {
+                "sleep through the night": "sleep"
+            }
+        },
+        "sleep": {
+            "speech": "After sleeping for only a few hours, you wake up to the sound of banging and crashing metal. You look out the window to see lizards crawling up the window. Confused, you look out the window to see all kinds of lizards crawling around. As you look around, you realize that the crashings and bangings are coming from the door. You see a note on the floor. What would you like to do?",
+            "file": "bobdylan10.mp3",
+            "options": {
+                "read the note": "note2"
+            }
+        },
+        "note2": {
+            "speech": "The note reads: 'Barry- Something has happened, as you've probably noticed. Something weird is going on in the city. I'm going to try to find out what's going on. Stay safe and leave the city as soon as you can. Exit through the window that has the fire escape. -Your assistant.' You look over at the window and see the fire escape just past the lizards. What would you like to do?",
+            "file": "bobdylan11.mp3",
+            "options": {
+                "open the door": "doordeath",
+                "open the window": "windowdeath",
+                "look around your room": "room2"
+            }
+        },
+        "doordeath": {
+            "speech": "You open the door and are immediately attacked by some kind of weird, eldrich abomination. As you are picked up and dropped into it's gaping maw, you realize that you should have listened to your assistant. You have died. Go back to track  {start}  to try again, or skip back one track to undo the last move.",
+            "file": "bobdylan12.mp3",
+            "end": true
+        },
+        "windowdeath": {
+            "speech": "You open the window and try to climb out, but the lizards swarm you and drag you back into the room. You are overwhelmed and devoured by the lizards. You have died. Go back to track  {start}  to try again, or skip back two tracks to undo the last move.",
+            "file": "bobdylan12.mp3",
+            "end": true
+        },
+        "room2": {
+            "speech": "You look around the room and see your guitar, your phone, and a suitcase. What would you like to do?",
+            "file": "bobdylan12.mp3",
+            "options": {
+                "grab your guitar": "guitar",
+                "grab your phone": "phone",
+                "grab your suitcase": "suitcase",
+                "open the window": "windowdeath"
+            }
+        },
+        "guitar": {
+            "speech": "You grab your guitar, but you don't think it'd be very useful right now. It might be later though.",
+            "file": "bobdylan13.mp3",
+            "options": {
+                "grab your phone": "phone",
+                "grab your suitcase": "suitcase",
+                "open the window": "windowdeath"
+            }
+        },
+        "phone": {
+            "speech": "You grab your phone and see that you have a few missed calls and messages from your assistant. What would you like to do?",
+            "file": "bobdylan13.mp3",
+            "options": {
+                "listen to the messages": "messages",
+                "grab your guitar": "guitar",
+                "grab your suitcase": "suitcase",
+                "open the window": "windowdeath"
+            }
+        },
+        "messages": {
+            "speech": "You listen to the messages and hear your assistant's voice. 'come ON pick up! Barry, if you're listening, meet at the safehouse outside the city! Bring your guitar, and check the suitcase!' What would you like to do?",
+            "file": "bobdylan1.mp3",
+            "options": {
+                "grab your suitcase": "suitcase"
+            }
+        },
+        "suitcase": {
+            "speech": "You grab your suitcase and see it doesn't have what you were expecting. Instead of the expected clothes, it has something that looks like it would attach to your guitar and an axe. What would you like to do?",
+            "file": "bobdylan13.mp3",
+            "options": {
+                "grab your guitar": "guitar2"
+            }
+        },
+        "guitar2": {
+            "speech": "You attach the strange thing to your guitar and it asks you to touch your finger to it. You do so and it glows with a strange light and says 'Welcome, Barry Zeppelin.' You strum the guitar and it makes a strange sound and emits waves of power. You drop it and gasp as you see a large number of the lizards drop back and fall off the window. You pick it up and strap it on, as well as grabbing the axe. What would you like to do?",
+            "file": "bobdylan2.mp3",
+            "options": {
+                "open the window": "escape"
+            }
+        },
+        "escape": {
+            "speech": "You open the window and strum the guitar to get rid of the lizards. You climb out the window and onto the fire escape. You make your way down and see people screaming and running around. You start making your way out of the city.",
+            "file": "bobdylan3.mp3",
+            "options": {
+                "continue out of the city, directly towards the safe house": "safehouse",
+                "take a less direct route out of the city": "cityescape"
+            }
+        },
+        "safehouse": {
+            "speech": "You make your way directly towards the safe house. You almost reach it, but only a little before do you get ambushed by a large group of lizards. You start playing, but there are too many. You are overwhelmed and devoured by the lizards. You have died. Go back to track  {start}  to try again, or skip back one track to undo the last move.",
+            "file": "bobdylan4.mp3",
+            "end": true
+        },
+        "cityescape": {
+            "speech": "You take a less direct route out of the city. You see a group of people being attacked by lizards. What would you like to do?",
+            "file": "bobdylan4.mp3",
+            "options": {
+                "help the people": "help",
+                "avoid the people and continue on your way": "continue"
+            }
+        },
+        "help": {
+            "speech": "You start playing your guitar. Many of the lizards are vaporized, but they redirect their attention onto you. You are overwhelmed and devoured by the lizards. You have died. Go back to track  {start}  to try again, or skip back one track to undo the last move.",
+            "file": "bobdylan5.mp3",
+            "end": true
+        },
+        "continue": {
+            "speech": "You avoid the people (against your better instincts) and continue on your way. You make it out of the city and see the safe house in the distance. You make your way towards it and see your assistant waiting for you. You make it to the safe house and are safe for now.",
+            "file": "bobdylan5.mp3",
+            "options": {
+                "question your assistant": "question"
+            }
+        },
+        "question": {
+            "speech": "You question your assistant about what's going on. They tell you that the city has been taken over by a strange force and that you are one of the few people who can stop it. They tell you that you need to find the source of the power and destroy it. What would you like to do?",
+            "file": "bobdylan6.mp3",
+            "options": {
+                "head back into the city": "city2",
+                "quiz your assistant further": "quiz"
+            }
+        },
+        "quiz": {
+            "speech": "You quiz your assistant further and they tell you that the source of the power is in the center of the city. They tell you that you need to make your way there and destroy it. What would you like to do?",
+            "file": "bobdylan7.mp3",
+            "options": {
+                "head back into the city": "city3",
+                "ask your assistant how they know that": "how"
+            }
+        },
+        "how": {
+            "speech": "After asking your assistant how they know that, they touch you on your shoulder and you briefly get a view into the multiverse. Suddenly, you feel infinitesimally small and insignificant. You come back to the safe house and suddenly have a strong understanding that your assistant knows all of that because they helped plan it, but they didn't want to. What would you like to do?",
+            "file": "bobdylan8.mp3",
+            "options": {
+                "head back into the city": "city3"
+            }
+        },
+        "city3": {
+            "speech": "You head back into the city and make your way towards the center. You see lizards and other strange creatures, but you play your guitar and make your way through. You reach the center and see a large, glowing crystal. What would you like to do?",
+            "file": "bobdylan9.mp3",
+            "options": {
+                "attempt to destroy the crystal with the axe": "axe",
+                "use the guitar on the crystal": "guitar3"
+            }
+        },
+        "guitar3": {
+            "speech": "You strum the guitar and the crystal reacts. It starts to crack and shatter. You keep playing and the crystal explodes in a burst of light. The city is saved. What would you like to do?",
+            "file": "bobdylan10.mp3",
+            "options": {
+                "head back to the safe house": "safehouse2"
+            }
+        },
+        "axe": {
+            "speech": "You swing the axe at the crystal, but it doesn't even scratch the surface. The crystal reacts and sends out a shockwave that knocks you back. You are overwhelmed by the crystal's power and are consumed by it. You have died. Go back to track  {start}  to try again, or skip back two tracks to undo the last move.",
+            "file": "bobdylan11.mp3",
+            "end": true
+        },
+        "safehouse2": {
+            "speech": "You head back to the safe house and see your assistant waiting for you. They congratulate you on saving the city and tell you that you are a hero. You relax and rest for a while. What would you like to do?",
+            "file": "bobdylan12.mp3",
+            "options": {
+                "explore the city": "city4",
+                "rest and recover": "rest"
+            }
+        },
+        "city4": {
+            "speech": "You explore the city and see that it is slowly returning to normal. People are out and about, shops are open, and the lizards are gone. As you walk through the streets, people start clapping and start a small parade in your honor. What would you like to do?",
+            "file": "bobdylan13.mp3",
+            "options": {
+                "join the parade": "parade",
+                "head back to the safe house": "safehouse3"
+            }
+        },
+        "parade": {
+            "speech": "You join the parade and are cheered by the people of the city. You feel like a hero and enjoy the celebration. What would you like to do?",
+            "file": "bobdylan1.mp3",
+            "options": {
+                "head back to the safe house": "safehouse3"
+            }
+        },
+        "rest": {
+            "speech": "You rest and recover at the safe house. You feel tired but happy. You are a hero and have saved the city. The end.",
+            "file": "bobdylan2.mp3",
+            "end": true
+        },
+        "safehouse3": {
+            "speech": "You head back to the safe house and relax. You feel like a hero and enjoy the peace and quiet. The end.",
+            "file": "bobdylan3.mp3",
+            "end": true
+        }
+    }
+}
