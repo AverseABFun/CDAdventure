@@ -276,6 +276,7 @@ switch (version) {
                 if (version >= 1.31 && gameHasProperty(`game.${item}.file`) && !gameHasProperty(`game.${item}.merge`)) {
                     continue
                 }
+                setGameProperty(`game.${key}.originalSpeech`, getGameProperty(`game.${key}.speech`))
                 var regex = / ({.*?[^\\]})(?:\s|$)/m
                 var matches = String(getGameProperty(`game.${key}.speech`)).match(regex)
                 if (matches != null) {
