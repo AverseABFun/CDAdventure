@@ -5,8 +5,8 @@ if (process.argv.length<3) {
     console.error("\x1b[31mError: No game provided!\x1b[0m\x07")
     process.exit(1)
 }
-if (process.argv[2] == "--debug") {
-    console.error("\x1b[31mPlease provide debug option after game. If your game file is named --debug.json, then please change it.\x1b[0m\x07")
+if (process.argv[2] == "--no-audio") {
+    console.error("\x1b[31mPlease provide no audio option after game. If your game file is named --no-audio.json, then please change it.\x1b[0m\x07")
     process.exit(1)
 }
 if (!existsSync("./games/"+process.argv[2]+".json") && !(existsSync("./games/"+process.argv[2]) && existsSync("./games/"+process.argv[2]+"/game.json"))) {
@@ -15,17 +15,18 @@ if (!existsSync("./games/"+process.argv[2]+".json") && !(existsSync("./games/"+p
 }
 
 var out_directory = "out"
-var debug = false
+var no_audio = false
+const debug = false // Set to true to enable debug mode(breaks things but is useful for debugging)
 if (process.argv.length>=4) {
-    if (process.argv[3] != "--debug") {
+    if (process.argv[3] != "--no-audio") {
         out_directory = process.argv[3];
     } else {
-        debug = true;
+        no_audio = true;
     }
 }
 if (process.argv.length >= 5) {
-    if (process.argv[4] == "--debug") {
-        debug = true;
+    if (process.argv[4] == "--no-audio") {
+        no_audio = true;
     }
 }
 
@@ -108,6 +109,15 @@ function mergeFiles(inputFile1, inputFile2, outputFile, volume1=1) {
             return;
         }
     });
+}
+
+function produceManifest() {
+    var manifest = {
+        "version": 1,
+        "meta": getGameProperty("meta"),
+        "tracks": Object.keys(getGameProperty("game")).map((key)=>{return {"id": key, ...getGameProperty(`game.${key}`)} })
+    }
+    writeFileSync("./"+out_directory+"/manifest.json", JSON.stringify(manifest), 'utf8');
 }
 
 async function createOutput(trackId, playlist) {
@@ -305,19 +315,22 @@ switch (version) {
                 setGameProperty(`game.${key}.speech`, getGameProperty(`game.${key}.speech`)+options_out)
             }
         }
-        var playlist = beginPlaylist();
-        var beginning = getGameProperty("meta.beginning")
-        playlist = await createOutput(beginning, playlist)
-        for (var key of keys) {
-            if (key == beginning) {
-                continue;
+        if (!no_audio) {
+            var playlist = beginPlaylist();
+            var beginning = getGameProperty("meta.beginning")
+            playlist = await createOutput(beginning, playlist)
+            for (var key of keys) {
+                if (key == beginning) {
+                    continue;
+                }
+                playlist = await createOutput(key, playlist)
             }
-            playlist = await createOutput(key, playlist)
+            finishPlaylist(playlist, "./"+out_directory+"/"+"playlist.cue")
         }
-        finishPlaylist(playlist, "./"+out_directory+"/"+"playlist.cue")
         if (keys.length >= 100) {
             console.error(`\x1b[33mWarning: Over 99 game tracks. Please note that some CD players may not support having this many.\x1b[0m\x07`)
         }
+        produceManifest()
         break;
     default:
         assert(false, 3, "Invalid version, expected 1.3-1.32! Note: If you are for some reason trying to compile a 1.1 or 1.2 game(which shouldn't be possible), 1.1 and 1.2 have been removed from the compiler.")
